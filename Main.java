@@ -18,34 +18,47 @@ public class Main {
 
             int n = Integer.parseInt(st.nextToken());
 
-            String str = br.readLine();
+            String str1 = br.readLine();
+            String str2 = br.readLine();
 
-            int originalLen = 1;
+            List<Integer> evenA = new ArrayList<>();
+            List<Integer> oddA = new ArrayList<>();
+            List<Integer> evenB = new ArrayList<>();
+            List<Integer> oddB = new ArrayList<>();
 
-            for (int i = 1; i < n; i++) {
-
-                if (str.charAt(i) != str.charAt(i - 1)) {
-                    originalLen++;
-                }
-            }
-
-            int minLen = originalLen;
-
-            for (int i = 1; i < n - 1; i++) {
-                char prev = str.charAt(i - 1);
-                char curr = str.charAt(i);
-                char next = str.charAt(i + 1);
-
-                if (curr != prev && curr != next) {
-                    if (prev == next) {
-                        minLen = Math.min(minLen, originalLen - 2);
+            for (int i = 0; i < n; i++) {
+                if (str1.charAt(i) == '1') {
+                    if (i % 2 == 0) {
+                        evenA.add(i);
                     } else {
-                        minLen = Math.min(minLen, originalLen - 1);
+                        oddA.add(i);
+                    }
+                }
+                if (str2.charAt(i) == '1') {
+                    if (i % 2 == 0) {
+                        evenB.add(i);
+                    } else {
+                        oddB.add(i);
                     }
                 }
             }
 
-            sb.append(minLen).append("\n");
+            if (evenA.size() != evenB.size() || oddA.size() != oddB.size()) {
+                sb.append(-1).append("\n");
+                continue;
+            }
+
+            long totalOps = 0;
+
+            for (int i = 0; i < evenA.size(); i++) {
+                totalOps += Math.abs(evenA.get(i) - evenB.get(i)) / 2;
+            }
+
+            for (int i = 0; i < oddA.size(); i++) {
+                totalOps += Math.abs(oddA.get(i) - oddB.get(i)) / 2;
+            }
+
+            sb.append(totalOps).append("\n");
 
         }
 
