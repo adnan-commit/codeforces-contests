@@ -16,23 +16,36 @@ public class Main {
 
             st = new StringTokenizer(br.readLine());
 
-            int a = Integer.parseInt(st.nextToken());
-            int b = Integer.parseInt(st.nextToken());
-            int c = Integer.parseInt(st.nextToken());
+            int n = Integer.parseInt(st.nextToken());
 
-            int[] arr = { a, b, c };
+            String str1 = br.readLine();
+            String str2 = br.readLine();
 
-            Arrays.sort(arr);
+            int evenOnesA = 0, oddOnesA = 0, evenOnesB = 0, oddOnesB = 0;
 
-            int diff = 0;
-
-            if (a == b || b == c || a == c) {
-                diff = 0;
-            } else {
-                diff = Math.min(Math.abs(arr[2] - arr[1]),
-                        Math.min(Math.abs(arr[1] - arr[0]), Math.abs(arr[2] - arr[0])));
+            for (int i = 0; i < n; i++) {
+                if (str1.charAt(i) == '1') {
+                    if (i % 2 == 0) {
+                        evenOnesA++;
+                    } else {
+                        oddOnesA++;
+                    }
+                }
+                if (str2.charAt(i) == '1') {
+                    if (i % 2 == 0) {
+                        evenOnesB++;
+                    } else {
+                        oddOnesB++;
+                    }
+                }
             }
-            sb.append(diff).append("\n");
+
+            if (evenOnesA == evenOnesB && oddOnesA == oddOnesB) {
+                sb.append("YES\n");
+            } else {
+                sb.append("NO\n");
+            }
+
         }
 
         System.out.print(sb.toString());
