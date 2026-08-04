@@ -18,33 +18,34 @@ public class Main {
 
             int n = Integer.parseInt(st.nextToken());
 
-            String str1 = br.readLine();
-            String str2 = br.readLine();
+            String str = br.readLine();
 
-            int evenOnesA = 0, oddOnesA = 0, evenOnesB = 0, oddOnesB = 0;
+            int originalLen = 1;
 
-            for (int i = 0; i < n; i++) {
-                if (str1.charAt(i) == '1') {
-                    if (i % 2 == 0) {
-                        evenOnesA++;
-                    } else {
-                        oddOnesA++;
-                    }
+            for (int i = 1; i < n; i++) {
+
+                if (str.charAt(i) != str.charAt(i - 1)) {
+                    originalLen++;
                 }
-                if (str2.charAt(i) == '1') {
-                    if (i % 2 == 0) {
-                        evenOnesB++;
+            }
+
+            int minLen = originalLen;
+
+            for (int i = 1; i < n - 1; i++) {
+                char prev = str.charAt(i - 1);
+                char curr = str.charAt(i);
+                char next = str.charAt(i + 1);
+
+                if (curr != prev && curr != next) {
+                    if (prev == next) {
+                        minLen = Math.min(minLen, originalLen - 2);
                     } else {
-                        oddOnesB++;
+                        minLen = Math.min(minLen, originalLen - 1);
                     }
                 }
             }
 
-            if (evenOnesA == evenOnesB && oddOnesA == oddOnesB) {
-                sb.append("YES\n");
-            } else {
-                sb.append("NO\n");
-            }
+            sb.append(minLen).append("\n");
 
         }
 
