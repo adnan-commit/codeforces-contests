@@ -29,7 +29,8 @@ public class Main {
             if (a == b || b == c || a == c) {
                 diff = 0;
             } else {
-                diff = arr[2] - arr[1];
+                diff = Math.min(Math.abs(arr[2] - arr[1]),
+                        Math.min(Math.abs(arr[1] - arr[0]), Math.abs(arr[2] - arr[0])));
             }
             sb.append(diff).append("\n");
         }
