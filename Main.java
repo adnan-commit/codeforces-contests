@@ -1,4 +1,4 @@
-//Problem Link: https://codeforces.com/contest/2252/problem/D
+//Problem Link: https://codeforces.com/contest/2253/problem/A
 
 import java.io.*;
 import java.util.*;
@@ -20,42 +20,25 @@ public class Main {
 
             int n = Integer.parseInt(st.nextToken());
 
-            long[] arr = new long[n];
-
-            st = new StringTokenizer(br.readLine());
-
-            for (int i = 0; i < n; i++) {
-                arr[i] = Long.parseLong(st.nextToken());
+            if (isPrime(n + 1)) {
+                sb.append("YES\n");
+            } else {
+                sb.append("NO\n");
             }
-
-            long[] d = new long[n - 1];
-            for (int i = 0; i < n - 1; i++) {
-                d[i] = arr[i + 1] - arr[i];
-            }
-
-            int l = 0;
-            while (l < n - 1) {
-                int r = l;
-                while (r + 1 < n - 1 && Math.abs(d[r + 1] % 2) == Math.abs(d[l] % 2)) {
-                    r++;
-                }
-
-                Arrays.sort(d, l, r + 1);
-
-                l = r + 1;
-            }
-
-            sb.append(arr[0]);
-            long current = arr[0];
-            for (int i = 0; i < n - 1; i++) {
-                current += d[i];
-                sb.append(" ").append(current);
-            }
-            sb.append("\n");
 
         }
 
         System.out.print(sb.toString());
+    }
+
+    private static boolean isPrime(int n) {
+        if (n < 2)
+            return false;
+        for (int i = 2; i * i <= n; i++) {
+            if (n % i == 0)
+                return false;
+        }
+        return true;
     }
 
 }
