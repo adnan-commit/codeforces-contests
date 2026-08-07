@@ -1,9 +1,24 @@
-//Problem Link: https://codeforces.com/contest/2253/problem/B
+//Problem Link: https://codeforces.com/contest/2253/problem/C
 
 import java.io.*;
 import java.util.*;
 
 public class Main {
+
+    static class Element implements Comparable<Element> {
+        int value;
+        int type;
+
+        public Element(int value, int type) {
+            this.value = value;
+            this.type = type;
+        }
+
+        @Override
+        public int compareTo(Element other) {
+            return Integer.compare(other.value, this.value);
+        }
+    }
 
     public static void main(String[] args) throws IOException {
 
@@ -19,77 +34,85 @@ public class Main {
             st = new StringTokenizer(br.readLine());
 
             int n = Integer.parseInt(st.nextToken());
+            int m = Integer.parseInt(st.nextToken());
+            int x = Integer.parseInt(st.nextToken());
+            int y = Integer.parseInt(st.nextToken());
 
-            int[] arr = new int[n];
+            Set<Integer> A = new HashSet<>();
 
             st = new StringTokenizer(br.readLine());
 
-            for (int i = 0; i < n; i++) {
-                arr[i] = Integer.parseInt(st.nextToken());
+            for (int i = 0; i < x; i++) {
+                A.add(Integer.parseInt(st.nextToken()));
             }
 
-            List<Integer> colors = new ArrayList<>();
-            List<Integer> length = new ArrayList<>();
+            Set<Integer> B = new HashSet<>();
 
-            int count = 1;
+            st = new StringTokenizer(br.readLine());
 
-            for (int i = 1; i < n; i++) {
-                if (arr[i] == arr[i - 1]) {
-                    count++;
+            for (int i = 0; i < y; i++) {
+                B.add(Integer.parseInt(st.nextToken()));
+            }
+
+            Set<Integer> union = new HashSet<>(A);
+            union.addAll(B);
+
+            List<Element> elements = new ArrayList<>();
+
+            for(int val : union){
+                boolean isInA = A.contains(val);
+                boolean isInB = B.contains(val);
+
+                int type;
+
+                if(isInA && isInB){
+                    type = 2;
+                } else if(isInA){
+                    type = 0;
                 } else {
-                    colors.add(arr[i - 1]);
-                    length.add(count);
-                    count = 1;
+                    type = 1;
                 }
+                elements.add(new Element(val, type));
             }
 
-            colors.add(arr[n - 1]);
-            length.add(count);
+            Collections.sort(elements);
 
-            int k = colors.size();
+            int limit = n + m - 1;
+            int countA = 0;
+            int countB = 0;
+            int totalCount = 0;
+            int maxSum = 0;
 
-            boolean canPlusTwo = false;
-            for (int i = 0; i < k-1; i++) {
-                if (length.get(i) >= 2 && length.get(i + 1) >= 2) {
-                    canPlusTwo = true;
+            for(Element el : elements){
+                if(totalCount >= limit){
                     break;
                 }
-            }
 
-            if(canPlusTwo){
-                sb.append(k + 2).append("\n");
-                continue;
-            }
-
-            boolean canPlusOne = false;
-            for (int i = 0; i < k; i++) {
-                if (length.get(i) >= 2) {
-                    if(i > 0){
-                        if(i == 1 || !colors.get(i-2).equals(colors.get(i))){
-                            canPlusOne = true;
-                            break;
-                        }   
+                if(el.type == 0){
+                    if(countA < n){
+                        maxSum += el.value;
+                        countA++;
+                        totalCount++;
                     }
-                    if(i < k - 1){
-                        if(i == k - 2 || !colors.get(i+2).equals(colors.get(i))){
-                            canPlusOne = true;
-                            break;
-                        }
+                } else if(el.type == 1){
+                    if(countB < m){
+                        maxSum += el.value;
+                        countB++;
+                        totalCount++;
                     }
+                } else{
+                    totalCount++;
+                    maxSum += el.value;
                 }
             }
 
-            if(canPlusOne){
-                sb.append(k + 1).append("\n");
-                continue;
-            }else{
-                sb.append(k).append("\n");
-            }
+            sb.append(maxSum).append("\n");
+
+
 
         }
 
         System.out.print(sb.toString());
     }
-
 
 }
