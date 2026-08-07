@@ -59,15 +59,15 @@ public class Main {
 
             List<Element> elements = new ArrayList<>();
 
-            for(int val : union){
+            for (int val : union) {
                 boolean isInA = A.contains(val);
                 boolean isInB = B.contains(val);
 
                 int type;
 
-                if(isInA && isInB){
+                if (isInA && isInB) {
                     type = 2;
-                } else if(isInA){
+                } else if (isInA) {
                     type = 0;
                 } else {
                     type = 1;
@@ -77,42 +77,46 @@ public class Main {
 
             Collections.sort(elements);
 
-            int limit = n + m - 1;
-            int countA = 0;
-            int countB = 0;
-            int totalCount = 0;
-            int maxSum = 0;
+            long ans1 = solve(elements, n, m - 1, n + m - 1);
+            long ans2 = solve(elements, n - 1, m, n + m - 1);
 
-            for(Element el : elements){
-                if(totalCount >= limit){
-                    break;
-                }
-
-                if(el.type == 0){
-                    if(countA < n){
-                        maxSum += el.value;
-                        countA++;
-                        totalCount++;
-                    }
-                } else if(el.type == 1){
-                    if(countB < m){
-                        maxSum += el.value;
-                        countB++;
-                        totalCount++;
-                    }
-                } else{
-                    totalCount++;
-                    maxSum += el.value;
-                }
-            }
-
-            sb.append(maxSum).append("\n");
-
-
+            sb.append(Math.max(ans1, ans2)).append("\n");
 
         }
 
         System.out.print(sb.toString());
+    }
+
+    private static long solve(List<Element> elements, int maxA, int maxB, int maxTotal) {
+        int countA = 0;
+        int countB = 0;
+        int totalCount = 0;
+        long sum = 0;
+
+        for (Element element : elements) {
+            if (totalCount >= maxTotal) {
+                break;
+            }
+
+            if (element.type == 0) {
+                if (countA < maxA) {
+                    sum += element.value;
+                    countA++;
+                    totalCount++;
+                }
+            } else if (element.type == 1) {
+                if (countB < maxB) {
+                    sum += element.value;
+                    countB++;
+                    totalCount++;
+                }
+            } else {
+                totalCount++;
+                sum += element.value;
+            }
+        }
+
+        return sum;
     }
 
 }
