@@ -1,24 +1,9 @@
-//Problem Link: https://codeforces.com/contest/2253/problem/C
+//problem link: https://codeforces.com/contest/2272/problem/A
 
 import java.io.*;
 import java.util.*;
 
 public class Main {
-
-    static class Element implements Comparable<Element> {
-        int value;
-        int type;
-
-        public Element(int value, int type) {
-            this.value = value;
-            this.type = type;
-        }
-
-        @Override
-        public int compareTo(Element other) {
-            return Integer.compare(other.value, this.value);
-        }
-    }
 
     public static void main(String[] args) throws IOException {
 
@@ -33,90 +18,72 @@ public class Main {
 
             st = new StringTokenizer(br.readLine());
 
-            int n = Integer.parseInt(st.nextToken());
-            int m = Integer.parseInt(st.nextToken());
-            int x = Integer.parseInt(st.nextToken());
-            int y = Integer.parseInt(st.nextToken());
-
-            Set<Integer> A = new HashSet<>();
+            int[] arr = new int[Integer.parseInt(st.nextToken())];
+            int k = Integer.parseInt(st.nextToken());
 
             st = new StringTokenizer(br.readLine());
 
-            for (int i = 0; i < x; i++) {
-                A.add(Integer.parseInt(st.nextToken()));
+            for (int i = 0; i < arr.length; i++) {
+                arr[i] = Integer.parseInt(st.nextToken());
             }
 
-            Set<Integer> B = new HashSet<>();
+            int originalScore = calculateScore(arr, k);
 
-            st = new StringTokenizer(br.readLine());
+            int bestScore = originalScore;
+            int bestI = -1;
+            int bestJ = -1;
 
-            for (int i = 0; i < y; i++) {
-                B.add(Integer.parseInt(st.nextToken()));
-            }
+            for (int i = 0; i < arr.length; i++) {
+                for (int j = i + 1; j < arr.length; j++) {
 
-            Set<Integer> union = new HashSet<>(A);
-            union.addAll(B);
+                    int temp = arr[i];
+                    arr[i] = arr[j];
+                    arr[j] = temp;
 
-            List<Element> elements = new ArrayList<>();
+                    int score = calculateScore(arr, k);
 
-            for (int val : union) {
-                boolean isInA = A.contains(val);
-                boolean isInB = B.contains(val);
+                    if (score > bestScore) {
+                        bestScore = score;
+                        bestI = i;
+                        bestJ = j;
+                    }
 
-                int type;
-
-                if (isInA && isInB) {
-                    type = 2;
-                } else if (isInA) {
-                    type = 0;
-                } else {
-                    type = 1;
+                    temp = arr[i];
+                    arr[i] = arr[j];
+                    arr[j] = temp;
                 }
-                elements.add(new Element(val, type));
             }
 
-            Collections.sort(elements);
-
-            long ans1 = solve(elements, n, m - 1, n + m - 1);
-            long ans2 = solve(elements, n - 1, m, n + m - 1);
-
-            sb.append(Math.max(ans1, ans2)).append("\n");
+            if (bestI == -1) {
+                System.out.println(-1);
+            } else {
+                System.out.println((bestI + 1) + " " + (bestJ + 1));
+            }
 
         }
 
         System.out.print(sb.toString());
     }
 
-    private static long solve(List<Element> elements, int maxA, int maxB, int maxTotal) {
-        int countA = 0;
-        int countB = 0;
-        int totalCount = 0;
-        long sum = 0;
+    private static int calculateScore(int[] a, int k) {
+        int n = a.length;
+        boolean[] seen = new boolean[n + 1];
+        int[] mexValues = new int[n];
+        int mex = 0;
 
-        for (Element element : elements) {
-            if (totalCount >= maxTotal) {
-                break;
+        for (int i = 0; i < n; i++) {
+            seen[a[i]] = true;
+
+            while (seen[mex]) {
+                mex++;
             }
 
-            if (element.type == 0) {
-                if (countA < maxA) {
-                    sum += element.value;
-                    countA++;
-                    totalCount++;
-                }
-            } else if (element.type == 1) {
-                if (countB < maxB) {
-                    sum += element.value;
-                    countB++;
-                    totalCount++;
-                }
-            } else {
-                totalCount++;
-                sum += element.value;
-            }
+            mexValues[i] = mex;
         }
 
-        return sum;
+        Arrays.sort(mexValues);
+
+        return mexValues[n - k];
     }
 
 }
